@@ -10,4 +10,11 @@ public class CinemaContext : DbContext
     }
 
     public DbSet<Cinema> Cinemas { get; set; } = null!;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Cinema>()
+            .Property(c => c.Id)
+            .ValueGeneratedOnAdd();
+    }
 }
