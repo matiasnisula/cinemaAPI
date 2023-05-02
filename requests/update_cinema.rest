@@ -1,0 +1,10 @@
+PUT http://localhost:5221/cinemas/1
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "nameUpdate2",
+    "openingHour": 0,
+    "closingHour": 0,
+    "showDuration": 0
+}
