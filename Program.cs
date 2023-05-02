@@ -20,6 +20,7 @@ var options = new DbContextOptionsBuilder<CinemaContext>()
         .Options;
     using (var context = new CinemaContext(options))
     {
+        context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
     }
 
