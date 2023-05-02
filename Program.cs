@@ -1,22 +1,25 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.HttpLogging;
 using cinemaAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-string connectionString = "Server=localhost;Port=5432;Database=database;User Id=admin;Password=admin;";
+builder.Services.AddHttpLogging(logging =>
+{
+    logging.LoggingFields = HttpLoggingFields.RequestProperties;
+});
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddDbContext<CinemaContext>(opt =>
-    opt.UseNpgsql(connectionString));
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnectionLocal")));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // TODO: Check whether the schema needs to be initialized
 
 var options = new DbContextOptionsBuilder<CinemaContext>()
-        .UseNpgsql(connectionString)
+        .UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnectionLocal"))
         .Options;
     using (var context = new CinemaContext(options))
     {
@@ -25,6 +28,8 @@ var options = new DbContextOptionsBuilder<CinemaContext>()
     }
 
 var app = builder.Build();
+
+app.UseHttpLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
