@@ -57,5 +57,26 @@ namespace cinemaAPI.Controllers
 
             return CreatedAtAction("GetCinema", new { id = cinema.Id }, cinema);
         }
+
+        // DELETE cinemas/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCinema(int id)
+        {
+            if (_context.Cinemas == null)
+            {
+                return NotFound();
+            }
+            var cinema = await _context.Cinemas.FindAsync(id);
+            
+            if (cinema == null)
+            {
+                return NotFound();
+            }
+
+            _context.Cinemas.Remove(cinema);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { success = true });
+        }
     }
 }

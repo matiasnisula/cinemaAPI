@@ -1,0 +1,1 @@
+DELETE http://localhost:5221/cinemas/1
