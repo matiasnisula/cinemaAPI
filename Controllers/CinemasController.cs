@@ -58,6 +58,32 @@ namespace cinemaAPI.Controllers
             return CreatedAtAction("GetCinema", new { id = cinema.Id }, cinema);
         }
 
+        // PUT: cinemas/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutCinema(int id, Cinema cinema)
+        {
+            if (id != cinema.Id)
+            {
+                return BadRequest();
+            }
+
+            var cinemaToUpdate = await _context.Cinemas.FindAsync(id);
+            if (cinemaToUpdate == null)
+            {
+                return NotFound();
+            }
+            // TODO: check if required fields are provided
+            cinemaToUpdate.Name = cinema.Name;
+            cinemaToUpdate.OpeningHour = cinema.OpeningHour;
+            cinemaToUpdate.ClosingHour = cinema.ClosingHour;
+            cinemaToUpdate.ShowDuration = cinema.ShowDuration;
+
+            _context.Cinemas.Update(cinemaToUpdate);
+            await _context.SaveChangesAsync();
+
+            return Ok(cinemaToUpdate);
+        }
+
         // DELETE cinemas/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCinema(int id)
