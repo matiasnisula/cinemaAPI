@@ -1,0 +1,36 @@
+POST http://localhost:5221/cinemas
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "Cinema1",
+    "openingHour":13,
+    "closingHour":21,
+    "showDuration":60
+}
+
+######
+
+POST http://localhost:5221/cinemas
+Content-Type: application/json
+
+{
+    "id": 2,
+    "name": "Cinema2",
+    "openingHour":11,
+    "closingHour":23,
+    "showDuration":45
+}
+
+#######
+
+POST http://localhost:5221/cinemas
+Content-Type: application/json
+
+{
+    "id": 3,
+    "name": "Cinema3",
+    "openingHour":9,
+    "closingHour":19,
+    "showDuration":75
+}
