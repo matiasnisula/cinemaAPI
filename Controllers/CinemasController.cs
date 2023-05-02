@@ -44,6 +44,21 @@ namespace cinemaAPI.Controllers
             return cinema;
         }
 
+        // GET: cinemas/1/showtimes
+        // openingHour=13 closingHour=23 duration=60
+        // [(13, 0), (14, 15), (15, 30), (16, 45), (18, 0), (19, 15), (20, 30), (21, 45)]
+        [HttpGet("{id}/showtimes")]
+        public async Task<ActionResult<IEnumerable<(int, int)[]>>> GetShowtimes(int id)
+        {
+            var cinema = await _context.Cinemas.FindAsync(id);
+            if (cinema == null)
+            {
+                return NotFound();
+            }
+            Tuple<int, int>[] showtimes = CalculateShowtimes(cinema.OpeningHour, cinema.ClosingHour, cinema.ShowDuration);
+            return Ok(new { showtimes = showtimes });
+        }
+
         // POST: cinemas
         [HttpPost]
         public async Task<ActionResult<Cinema>> PostCinema(Cinema cinema)
@@ -103,6 +118,42 @@ namespace cinemaAPI.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new { success = true });
+        }
+
+        private Tuple<int, int>[] CalculateShowtimes(int openingHour, int closingHour, int duration)
+        {
+            List<Tuple<int, int>> times = new List<Tuple<int, int>>();
+            int startingHour = openingHour;
+            int startingMinute = 0;
+            int minutesToNextShow = duration + 15;
+            int hoursToAdd = 0;
+            times.Add(Tuple.Create(startingHour, startingMinute));
+            while (true)
+            {
+                hoursToAdd = (startingMinute + minutesToNextShow) / 60;
+                startingHour += hoursToAdd;
+                startingMinute = (startingMinute + minutesToNextShow) % 60;
+
+                if (closingHour >= 0 & closingHour <= 6)
+                {
+                    if (startingHour >= closingHour + 24)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    if (startingHour >= closingHour)
+                    {
+                        break;
+                    }
+                }
+
+                times.Add(Tuple.Create((startingHour >= 24 ? startingHour - 24 : startingHour), startingMinute));
+
+            }
+            Tuple<int, int>[] showtimes = times.ToArray();
+            return showtimes;
         }
     }
 }
