@@ -13,7 +13,7 @@ It can be shut down with
 ```
 docker compose -f docker-compose.dev.yml down --volumes
 ```
-Image uses volume to persist data (bind to directory postgres-data in local filesystem). This may cause some permission issues.
+Image uses volume to persist data (binded to directory postgres-data in local filesystem). This may cause some permission issues.
 It's possible to give all users read permissions (Linux) with
 ```
 (sudo) chmod -R a+r postgres-data/
